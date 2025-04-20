@@ -1,0 +1,40 @@
+name: Node.js CI with Docker
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Hacer checkout del código del repositorio
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. Configurar Docker y Docker Compose
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # 3. Crear la imagen de Docker y levantar los contenedores
+      - name: Build and run app with Docker Compose
+        run: |
+          docker-compose up -d --build
+
+      # 4. Esperar a que la app esté lista (puedes ajustar el tiempo si es necesario)
+      - name: Wait for the app to be ready
+        run: sleep 10
+
+      # 5. Realizar pruebas de las rutas con `curl` (web1 y web2)
+      - name: Test web1
+        run: curl --fail http://localhost:3000/web1
+
+      - name: Test web2
+        run: curl --fail http://localhost:3000/web2
+
+      # 6. Apagar los contenedores Docker después de las pruebas
+      - name: Shut down Docker containers
+        run: docker-compose down
