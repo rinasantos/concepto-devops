@@ -22,7 +22,7 @@ jobs:
       # 3. Crear la imagen de Docker y levantar los contenedores
       - name: Build and run app with Docker Compose
         run: |
-          docker-compose up -d --build
+          docker compose up -d --build
 
       # 4. Esperar a que la app esté lista (puedes ajustar el tiempo si es necesario)
       - name: Wait for the app to be ready
